@@ -49,7 +49,7 @@ def content_extractor():
 def checker(site):
     scraper = cloudscraper.create_scraper()
     try:
-        response = scraper.head(site, timeout=10, allow_redirects=True)
+        response = scraper.get(site, timeout=10, allow_redirects=True)
         if 200 <= response.status_code < 400:
             with thread_lock:
                 _section_ = section_map[site]  # 获取所属分区
