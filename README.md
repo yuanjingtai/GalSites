@@ -3,17 +3,14 @@
 ### **⭐欢迎加入交流群：[787128349](https://qm.qq.com/q/vYhkrip9Oa)⭐** 
 
 ## 📅更新日志
-**更新时间：** 2025年4月20日
+**更新时间：** 2025年5月11日
 
-**更新内容：** 
-1. ➕添加新站点：`GALBase`、`Angelmoe`、`VNDL`；
-2. ➖移除不再免费的站点：`猫猫网盘`；
-3. ➖英灵殿增加成员：`天使二次元`；
-4. 📝优化了`项目说明`；
-5. 📝优化了`站点列表`的排版；
-6. 🔄用DeepSeek重构了`Checker.py`；
-7. 💬创建了此项目的交流群；
-8. 🌟Ciallo～(∠・ω< )⌒☆
+**更新内容：**
+1. ➖移除不再无门槛的站点：`天使二次元`；
+2. 🔄重定向`莉斯坦ACG`至新链接；
+3. 📝优化了`站点列表`的排版；
+4. 📝优化了`Checker.py`；
+5. 🌟Ciallo～(∠・ω< )⌒☆
 
 
 ## 🧾项目说明
@@ -39,20 +36,21 @@
 
 ### 主要站点
 | 站点名称             | 链接                            | 相关站点                                                                              | 备注          |
-|:-----------------|:------------------------------|:----------------------------------------------------------------------------------|-------------|
+|------------------|-------------------------------|-----------------------------------------------------------------------------------|-------------|
 | Galgame聚合搜索      | https://searchgal.cpolar.top/ | [GitHub](https://github.com/Jurangren/SearchGal)                                  | -           |
 | 失落小站             | https://shinnku.com/          | [GitHub](https://github.com/shinnku-nikaidou/upset-gal-web)                       | -           |
 | TouchGal         | https://www.touchgal.io/      | [GitHub](https://github.com/KUN1007/kun-touchgal-next)                            | -           |
 | KUN Visual Novel | https://www.kungal.com/zh-cn/ | [GitHub](https://github.com/KUN1007/kun-galgame-nuxt3)                            | -           |
 | Galgame月谣        | https://www.sayafx.top/       | [GitHub](https://github.com/Moonpsalms-org) \|  [网盘页面](https://cloud.sayafx.top/) | -           |
 | 青桔网              | https://qingju.org/           | [GitHub](https://github.com/qingjuacg/qingju/)                                    | -           |
-| 莉斯坦ACG           | https://limulu24.github.io/   | -                                                                                 | -           |
+| 莉斯坦ACG           | https://www.limulu.moe        | -                                                                                 | -           |
 | 晴空咖啡馆            | https://aozoracafe.com/       | -                                                                                 | -           |
 | YuliGames        | https://mihoyo.ink/           | -                                                                                 | -           |
 | 紫缘社              | https://www.galzy.eu.org/     | -                                                                                 | -           |
 | 梓澪の妙妙屋           | https://zi0.cc/               | -                                                                                 | -           |
 | 樱赞繁星             | https://amoebi.com/           | -                                                                                 | -           |
 | VNDL             | https://www.galrc.eu.org/     | -                                                                                 | -           |
+| 量子ACG            | https://lzacg.one/            | -                                                                                 | -           |
 | 莫邪游戏资源网          | https://xiuren.cyou/          | -                                                                                 | -           |
 | 烟郁Galgame        | https://yanyugal.top/         | -                                                                                 | -           |
 | My Galgame       | https://www.mmgal.com/        | -                                                                                 | -           |
@@ -60,32 +58,30 @@
 | xxacg            | https://xxacg.net/            | -                                                                                 | 需登录         |
 | Angelmoe         | https://xn--5tz81q.com/       | -                                                                                 | 需登录         |
 | GALBase          | https://galbase.top/          | -                                                                                 | 需登录         |
-| 量子ACG            | https://lzacg.one/            | -                                                                                 | 需登录         |
 | 绮梦ACG            | https://acgs.one/             | -                                                                                 | 需回复         |
 | NekoGAL          | https://www.nekogal.com/      | -                                                                                 | 需登录 \| 需回复  |
 | 绅士天堂             | https://www.gogalgame.com/    | -                                                                                 | 需登录 \| 磁链为主 |
 
 ### Telegram频道
 
-| 站点名称                 | 链接                         |
-|:---------------------|:---------------------------|
-| 黄油联盟                 | https://t.me/GalLeaguebot  |
-| 半夏残风                 | https://t.me/BBanxia       |
-| Visual Novel Channel | https://t.me/erogamecloud/ |
-| 莱茵图书馆                | https://t.me/RhineLibrary/ |
+| 站点名称                 | 链接                        |
+|----------------------|---------------------------|
+| 黄油联盟                 | https://t.me/GalLeaguebot |
+| 半夏残风                 | https://t.me/BBanxia      |
+| Visual Novel Channel | https://t.me/erogamecloud |
+| 莱茵图书馆                | https://t.me/RhineLibrary |
 
 
 ### 英灵殿
-| 站点名称       | 链接                        |
-|:-----------|:--------------------------|
-| 宁宇资源站      | https://ningyu.ga/        |
-| GalWorld   | https://acgngame.top/     |
-| GalX次元     | http://223323.xyz/        |
-| 莉莉絲の遊戲原盤倉庫 | https://sakakirio.com/    |
-| 穹之下        | https://www.soraacg.com/  |
-| 姬路白雪の资源小站  | https://pan.jlbx.xyz/     |
-| 神隐之乡       | https://syzx.me/          |
-| 天使二次元      | https://www.tianshie.com/ |
+| 站点名称       | 链接                         |
+|------------|----------------------------|
+| 宁宇资源站      | https://ningyu.ga/         |
+| GalWorld   | https://acgngame.top/      |
+| GalX次元     | http://223323.xyz/         |
+| 莉莉絲の遊戲原盤倉庫 | https://sakakirio.com/     |
+| 穹之下        | https://www.soraacg.com/   |
+| 姬路白雪の资源小站  | https://pan.jlbx.xyz/      |
+| 神隐之乡       | https://syzx.me/           |
 
 ---
 

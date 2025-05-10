@@ -72,9 +72,7 @@ def checker(site):
     try:
         response = scraper.get(site, timeout=10, allow_redirects=True)
         status = "可用" if 200 <= response.status_code < 400 else "异常"
-        msg = f"{status}：【{section_map[site]}】{name_list[url_list.index(site)]}({site})"
-        if status == "异常":
-            msg += f" -> {response.status_code}"
+        msg = f"{status}：【{section_map[site]}】{name_list[url_list.index(site)]}({site}) -> <{response.status_code}>"
     except Exception as e:
         msg = f"异常：【{section_map[site]}】{name_list[url_list.index(site)]}({site}) -> {type(e).__name__}"
 
