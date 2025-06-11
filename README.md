@@ -3,14 +3,13 @@
 ### **⭐欢迎加入交流群：[787128349](https://qm.qq.com/q/vYhkrip9Oa)⭐** 
 
 ## 📅更新日志
-**更新时间：** 2025年5月19日
+**更新时间：** 2025年6月11日
 
 **更新内容：**
-1. ➕添加新站点：`喵源领域`；
-2. 🔄将`relx_Galgame`更名为`0721_Galgame`；
-3. 📊添加了`调查问卷`栏目，用于完善`资源相对丰度参考表格`；
-4. 📝优化了`站点列表`；
-5. 🌟Ciallo～(∠・ω< )⌒☆
+1. ➕添加新站点：`猫猫网盘`；
+2. 🔄将`绅士天堂`移回主要站点；
+3. 🔗合并`晴空咖啡馆`和`樱赞繁星`；
+4. 🌟Ciallo～(∠・ω< )⌒☆
 
 
 ## 📊调查问卷
@@ -65,13 +64,14 @@
 | 鲲Galgame     | https://www.kungal.com/zh-cn/ | [GitHub](https://github.com/KUN1007/kun-galgame-nuxt3)                            | -          |
 | 莉斯坦ACG       | https://www.limulu.moe        | -                                                                                 | -          |
 | 量子ACG        | https://lzacg.one/            | -                                                                                 | -          |
+| 猫猫网盘         | https://sakiko.de/            | [GitHub](https://github.com/Yuri-NagaSaki)                                        | -          |
 | 喵源领域         | https://www.acgn.im/          | [网盘页面](https://cloud.sayafx.top/)                                                 | 需登录        |
 | 莫邪游戏资源网      | https://xiuren.cyou/          | -                                                                                 | -          |
 | 绮梦ACG        | https://acgs.one/             | -                                                                                 | 需回复        |
 | 青桔网          | https://qingju.org/           | [GitHub](https://github.com/qingjuacg/qingju/)                                    | -          |
 | 晴空咖啡馆        | https://aozoracafe.com/       | -                                                                                 | -          |
+| 绅士天堂         | https://www.gogalgame.com/    | -                                                                                 | 需登录        |
 | 失落小站         | https://shinnku.com/          | [GitHub](https://github.com/shinnku-nikaidou/upset-gal-web)                       | -          |
-| 樱赞繁星         | https://amoebi.com/           | -                                                                                 | -          |
 | 梓澪の妙妙屋       | https://zi0.cc/               | -                                                                                 | -          |
 | 紫缘社          | https://www.galzy.eu.org/     | -                                                                                 | -          |
 
@@ -93,7 +93,6 @@
 | 穹之下        | https://www.soraacg.com/   |
 | 姬路白雪の资源小站  | https://pan.jlbx.xyz/      |
 | 神隐之乡       | https://syzx.me/           |
-| 绅士天堂       | https://www.gogalgame.com/ |
 | 烟郁Galgame  | https://yanyugal.top/      |
 
 
