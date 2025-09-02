@@ -1,116 +1,190 @@
-from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
-from time import time
-import cloudscraper
 import re
+from concurrent.futures import ThreadPoolExecutor
+from time import time
+from typing import Dict, List, Any
+
+import cloudscraper
+from rich.console import Console
+from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeRemainingColumn
+from rich.table import Table
 
 
-def process_table(lines, section_dict):
-    """处理表格数据并提取站点信息"""
-    if len(lines) < 3:  # 至少需要表头、分隔线和数据行
-        return
+class SiteChecker:
+    """
+    一个用于检测 GalGame 资源站点可用性的工具。
 
-    # 处理数据行（跳过表头和分隔线）
-    for row in lines[2:]:
-        columns = [col.strip() for col in row.split('|') if col.strip()]
-        if len(columns) < 2:
-            continue
+    该工具会从 README.md 文件中解析站点列表，
+    并使用 rich 库提供美观的命令行界面，
+    包括进度条和格式化的结果表格。
+    """
 
-        # 提取站点名称和链接
-        name = columns[0]
-        url_cell = columns[1]
+    def __init__(self, readme_path: str = "README.md"):
+        """
+        初始化 SiteChecker。
+        :param readme_path: README.md 文件的路径。
+        """
+        self.readme_path = readme_path
+        self.console = Console()
+        self.sections: Dict[str, Dict[str, str]] = self._parse_readme()
 
-        # 处理可能的Markdown链接格式
-        url_match = re.search(r'\[.*?]\((.*?)\)', url_cell)
-        url = url_match.group(1) if url_match else url_cell
+    def _parse_readme(self) -> Dict[str, Dict[str, str]]:
+        """
+        从 Markdown 文件中解析出章节和站点信息。
+        :return: 一个字典，键是章节名，值是包含站点名和URL的字典。
+        """
+        sections = {}
+        current_section_name = None
+        in_table = False
 
-        section_dict[name] = url
+        try:
+            with open(self.readme_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    # 检测章节标题
+                    if line.startswith("### "):
+                        current_section_name = line[4:].strip()
+                        sections[current_section_name] = {}
+                    # 检测表格内容
+                    elif current_section_name and line.startswith("|") and "---" not in line and "站点名称" not in line:
+                        columns = [col.strip() for col in line.split('|') if col.strip()]
+                        if len(columns) < 2:
+                            continue
 
+                        name = columns[0]
+                        url_cell = columns[1]
+                        # 正则匹配Markdown链接格式 [text](url)
+                        url_match = re.search(r'\[.*?]\((.*?)\)', url_cell)
+                        url = url_match.group(1) if url_match else url_cell
+                        sections[current_section_name][name] = url
+            return sections
+        except FileNotFoundError:
+            self.console.print(
+                f"[bold red]错误：找不到文件 '{self.readme_path}'。请确保该文件与脚本在同一目录下。[/bold red]")
+            exit()
 
-def content_extractor():
-    """从Markdown表格中提取站点信息"""
-    sections = {}
-    current_section = None
-    table_buffer = []
-    in_table = False
+    def _select_sections(self) -> List[Dict[str, str]]:
+        """
+        向用户显示可选的章节并获取用户选择。
+        :return: 一个包含待检测站点信息的列表。
+        """
+        total_sites = sum(len(v) for v in self.sections.values())
 
-    with open("README.md", "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
+        # 使用 Panel 美化选项显示
+        section_list_str = ""
+        section_keys = list(self.sections.keys())
+        for i, name in enumerate(section_keys):
+            count = len(self.sections[name])
+            section_list_str += f"[cyan]{i + 1}[/cyan]. {name} ({count}个站点)\n"
 
-            # 检测章节标题
-            if line.startswith("### "):
-                if in_table:  # 处理上一个未完成的表格
-                    process_table(table_buffer, sections[current_section])
-                    table_buffer = []
-                    in_table = False
-                current_section = line[4:]
-                sections[current_section] = {}
+        self.console.print(Panel(
+            section_list_str.strip(),
+            title="[bold yellow]可选检测栏目[/bold yellow]",
+            subtitle=f"共发现 {total_sites} 个站点",
+            border_style="green"
+        ))
 
-            # 检测表格开始
-            elif current_section and line.startswith("|"):
-                table_buffer.append(line)
-                if not in_table:
-                    in_table = True
+        # 获取用户输入
+        selected_indices_str = self.console.input("[bold]请输入需要检测的栏目编号（多个请用空格分隔）:[/bold] > ")
 
-            # 表格结束处理
-            elif in_table and not line.startswith("|"):
-                process_table(table_buffer, sections[current_section])
-                table_buffer = []
-                in_table = False
+        sites_to_check = []
+        try:
+            selected_indices = [int(i) - 1 for i in selected_indices_str.split()]
+            for i in selected_indices:
+                if 0 <= i < len(section_keys):
+                    section_name = section_keys[i]
+                    for name, url in self.sections[section_name].items():
+                        sites_to_check.append({"name": name, "url": url, "section": section_name})
+        except ValueError:
+            self.console.print("[bold red]输入无效，请输入数字编号。[/bold red]")
+            return []
 
-        # 处理文件末尾的表格
-        if in_table:
-            process_table(table_buffer, sections[current_section])
+        return sites_to_check
 
-    return sections
+    @staticmethod
+    def _check_single_site(site_info: Dict[str, str]) -> Dict[str, Any]:
+        """
+        检测单个站点的可用性。
+        :param site_info: 包含站点名称、URL和章节的字典。
+        :return: 包含检测结果的字典。
+        """
+        scraper = cloudscraper.create_scraper(browser={'custom': 'Mozilla/5.0'})
+        url = site_info["url"]
+        result = {**site_info, "status": "异常", "result": ""}
 
+        try:
+            response = scraper.get(url, timeout=15, allow_redirects=True)
+            if 200 <= response.status_code < 400:
+                result["status"] = "可用"
+            result["result"] = f"[bold]{response.status_code}[/bold]"
+        except Exception as e:
+            result["result"] = f"[italic]{type(e).__name__}[/italic]"
 
-def checker(site):
-    """站点可用性检测"""
-    scraper = cloudscraper.create_scraper()
-    try:
-        response = scraper.get(site, timeout=10, allow_redirects=True)
-        status = "可用" if 200 <= response.status_code < 400 else "异常"
-        msg = f"{status}：【{section_map[site]}】{name_list[url_list.index(site)]}({site}) -> <{response.status_code}>"
-    except Exception as e:
-        msg = f"异常：【{section_map[site]}】{name_list[url_list.index(site)]}({site}) -> {type(e).__name__}"
+        return result
 
-    with thread_lock:
-        print(msg)
+    def _display_results(self, results: List[Dict[str, Any]], duration: float):
+        """
+        使用 rich.table.Table 格式化并显示结果。
+        :param results: 检测结果列表。
+        :param duration: 检测总耗时。
+        """
+        table = Table(title="[bold]站点可用性检测报告[/bold]", show_header=True, header_style="bold magenta")
+        table.add_column("状态", justify="center", style="cyan")
+        table.add_column("栏目", style="yellow")
+        table.add_column("站点名称", style="green")
+        table.add_column("URL", style="dim")
+        table.add_column("结果 (代码/错误)", justify="right")
+
+        results.sort(key=lambda x: (x["section"], x["status"] == "异常"))
+
+        for res in results:
+            status_icon = "✅" if res["status"] == "可用" else "❌"
+            status_color = "[green]" if res["status"] == "可用" else "[red]"
+
+            table.add_row(
+                f"{status_color}{status_icon} {res['status']}[/]",
+                res["section"],
+                res["name"],
+                res["url"],
+                f"{status_color}{res['result']}[/]"
+            )
+
+        self.console.print(table)
+        self.console.print(f"\n检测完成，共 {len(results)} 个站点，耗时 {duration:.2f} 秒。")
+
+    def run(self):
+        """
+        运行检测程序的主方法。
+        """
+        sites_to_check = self._select_sections()
+        if not sites_to_check:
+            self.console.print("[yellow]未选择有效站点，程序退出。[/yellow]")
+            return
+
+        self.console.print(f"\n[bold]准备检测 {len(sites_to_check)} 个站点...[/bold]")
+        start_time = time()
+        results = []
+
+        with Progress(
+                SpinnerColumn(),
+                "[progress.description]{task.description}",
+                BarColumn(),
+                "[progress.percentage]{task.percentage:>3.0f}%",
+                TextColumn("({task.completed}/{task.total})"),
+                TimeRemainingColumn(),
+                console=self.console,
+        ) as progress:
+            task = progress.add_task("[cyan]检测中...", total=len(sites_to_check))
+            with ThreadPoolExecutor(max_workers=20) as executor:
+                futures = [executor.submit(self._check_single_site, site) for site in sites_to_check]
+                for future in futures:
+                    results.append(future.result())
+                    progress.update(task, advance=1)
+
+        duration = time() - start_time
+        self._display_results(results, duration)
 
 
 if __name__ == "__main__":
-    # 提取站点数据
-    site_data = content_extractor()
-    total_sites = sum(len(v) for v in site_data.values())
-
-    # 用户选择检测范围
-    print(f"可选栏目（共发现 {total_sites} 个站点）:")
-    sections = list(site_data.items())
-    for i, (name, data) in enumerate(sections):
-        print(f"{i + 1}. {name}（{len(data)}个站点）")
-
-    selected = input("请输入需要检测的栏目编号（空格分隔）: ").split()
-    selected_sections = [sections[int(i) - 1] for i in selected if i.isdigit()]
-
-    # 准备检测数据
-    url_list = []
-    name_list = []
-    section_map = {}
-    for section_name, sites in selected_sections:
-        for name, url in sites.items():
-            url_list.append(url)
-            name_list.append(name)
-            section_map[url] = section_name
-
-    # 执行检测
-    if url_list:
-        print(f"\n开始检测 {len(url_list)} 个站点...")
-        thread_lock = Lock()
-        start = time()
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            executor.map(checker, url_list)
-        print(f"检测完成，耗时 {time() - start:.2f} 秒")
-    else:
-        print("未选择有效站点")
+    checker = SiteChecker()
+    checker.run()
